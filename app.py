@@ -47,7 +47,7 @@ with col1:
     power_consumption = st.slider("Power Consumption in kWh per card per month at 100% utilisation", 0, 500, 244, step=1)
 with col2:
     internet_cost = st.slider("Monthly internet cost in GBP", 0.00, 1000.00, 300.00, step=1.00)
-    misc_cost = st.slider("Monthly other costs in GBP", 0.00, 1000.00, 300.00, step=1.00)
+    misc_cost = st.slider("Monthly other costs in GBP", 0.00, 1000.00, 70.00, step=1.00)
 
 st.divider()
 
