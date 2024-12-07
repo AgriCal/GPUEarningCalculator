@@ -13,7 +13,7 @@ def get_usd_to_gbp_rate():
         return data['rates']['GBP']
     except:
         # Return a default rate if API call fails
-        return 0.79  # You might want to adjust this default value
+        return 0.79
 
 st.title("GPU Earning Calculator")
 
