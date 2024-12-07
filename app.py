@@ -23,10 +23,10 @@ col1, col2, col3 = st.columns(3)
 with col1:
     unit_price = st.number_input("Unit Price in GBP per system", value=25000, step=100)
 with col2:
-    tax_rate = st.number_input("Tax Rate %", value=24, step=1)
+    tax_rate = st.number_input("Tax Rate % (deductable rate)", value=24, step=1)
 with col3:
     gpu_per_system = st.number_input("GPU cards per system", value=5)
-num_systems = st.slider("Number of systems (6 to a rack)", 1, 24, 6)
+num_systems = st.slider("Number of systems", 1, 24, 6)
 
 effective_cost = unit_price - (unit_price * (tax_rate / 100))
 st.write(f"Effective Cost in GBP per system: £{effective_cost:,.0f}")
@@ -47,7 +47,7 @@ with col1:
 with col2:
     #s = f"rate in GBP: {charge_rate_gbp:,.2f}" if currency == "USD" else ""
     st.write(f"rate in GBP: {charge_rate_gbp:,.2f}") 
-    charge_rate_dep = st.slider("Expected fall of charge rate per year %", 0.00, 50.00, 10.00, step=0.5)
+    charge_rate_dep = st.slider("Expected fall of charge rate per year %", 0.00, 50.00, 6.00, step=1.00)
     platform_fees = st.slider("Platform fees %", 0, 50, 25, step=1)
 
 net_charge_rate = (charge_rate_gbp - (charge_rate_gbp * (platform_fees / 100)))
