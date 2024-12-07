@@ -108,6 +108,10 @@ df = pd.DataFrame({
     'Net Profit': net_profits
 })
 
+# Calculate ROI
+total_investment = effective_cost * num_systems
+roi_years = total_investment / (df['Net Profit'].mean())
+
 # Display results
 st.write("### Annual Profit Breakdown")
 st.dataframe(df.style.format({
@@ -118,8 +122,6 @@ st.dataframe(df.style.format({
 }))
 
 st.write(f"### Return on Investment")
-st.write(f"Total Investment: £{total_investment:,.0f}")
-st.write(f"Years to Break Even: {roi_years:.1f}")
 
 # After the ROI calculations, replace the chart section with:
 st.write("### Profit Visualization")
@@ -177,7 +179,9 @@ fig.update_layout(
 
 # Display the chart
 st.plotly_chart(fig, use_container_width=True)
-total_investment = effective_cost * num_systems
+
+st.write(f"Total Investment: £{total_investment:,.0f}")
+
 # Add a note about break-even
 if df['Cumulative Profit'].max() > total_investment:
     break_even_year = np.interp(
