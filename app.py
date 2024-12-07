@@ -3,6 +3,17 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import requests
+
+def get_usd_to_gbp_rate():
+    try:
+        # Using ExchangeRate-API (free tier)
+        response = requests.get('https://api.exchangerate-api.com/v4/latest/USD')
+        data = response.json()
+        return data['rates']['GBP']
+    except:
+        # Return a default rate if API call fails
+        return 0.79  # You might want to adjust this default value
 
 st.title("GPU Earning Calculator")
 
@@ -24,16 +35,22 @@ st.write(f"Total cost of systems is: £{effective_cost * num_systems:,.0f} which
 st.divider()
 
 st.write("## Income")
+
 col1, col2 = st.columns(2)
 with col1:
-    charge_rate = st.slider("Hourly Rate Per GPU in GBP", 0.00, 2.00, 0.50, step=0.01)
+    currency = "USD" if st.toggle("USD", value=True) is True else "GBP"
+    conversion_rate = get_usd_to_gbp_rate() if currency == "USD" else 1.0
+    charge_rate = st.slider(f"Hourly Rate Per GPU in {currency}", 0.00, 1.00, 0.45, step=0.01)
+    charge_rate_gbp = charge_rate * conversion_rate if currency == "USD" else charge_rate
     utilization = st.slider("GPU Utilisation %", 0, 100, 80)
 
 with col2:
+    #s = f"rate in GBP: {charge_rate_gbp:,.2f}" if currency == "USD" else ""
+    st.write(f"rate in GBP: {charge_rate_gbp:,.2f}") 
     charge_rate_dep = st.slider("Expected fall of charge rate per year %", 0.00, 50.00, 10.00, step=0.5)
     platform_fees = st.slider("Platform fees %", 0, 50, 25, step=1)
 
-net_charge_rate = (charge_rate - (charge_rate * (platform_fees / 100)))
+net_charge_rate = (charge_rate_gbp - (charge_rate_gbp * (platform_fees / 100)))
 y5_charge_rate = net_charge_rate * ((1 - (charge_rate_dep/100))**4)
 
 st.write(f"You are charging £{net_charge_rate:,.2f} per GPU hour (after charges) falling to £{y5_charge_rate:,.2f} after 5 years")
@@ -46,8 +63,8 @@ with col1:
     electricity_cost = st.slider("Electricity unit price in GBP", 0.00, 0.50, 0.25, step=0.01)
     power_consumption = st.slider("Power Consumption in kWh per card per month at 100% utilisation", 0, 500, 244, step=1)
 with col2:
-    internet_cost = st.slider("Monthly internet cost in GBP", 0.00, 1000.00, 300.00, step=1.00)
-    misc_cost = st.slider("Monthly other costs in GBP", 0.00, 1000.00, 70.00, step=1.00)
+    internet_cost = st.slider("Monthly internet cost in GBP", 0.00, 1000.00, 292.00, step=1.00)
+    misc_cost = st.slider("Monthly other costs in GBP", 0.00, 1000.00, 50.00, step=1.00)
 
 st.divider()
 
@@ -110,7 +127,7 @@ df = pd.DataFrame({
 
 # Calculate ROI
 total_investment = effective_cost * num_systems
-roi_years = total_investment / (df['Net Profit'].mean())
+# roi_years = total_investment / (df['Net Profit'].mean())
 
 # Display results
 st.write("### Annual Profit Breakdown")
