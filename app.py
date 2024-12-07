@@ -206,6 +206,13 @@ if df['Cumulative Profit'].max() > total_investment:
         df['Cumulative Profit'], 
         range(1, 6)
     )
-    st.write(f"📊 Break-even occurs after approximately {break_even_year:.1f} years")
+    # Convert decimal years to years and months
+    years = int(break_even_year)
+    months = int((break_even_year - years) * 12)
+    
+    if months == 0:
+        st.write(f"📊 Break-even occurs after {years} years")
+    else:
+        st.write(f"📊 Break-even occurs after {years} years and {months} months")
 else:
     st.write("⚠️ Investment does not break even within the 5-year period")
