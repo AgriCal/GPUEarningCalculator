@@ -21,16 +21,27 @@ st.divider()
 st.write("## Cost of a GPU System")
 col1, col2, col3 = st.columns(3)
 with col1:
-    unit_price = st.number_input("Unit Price in GBP per system", value=25000, step=100)
+    unit_price = st.number_input("Unit Price in GBP per system", value=24000, step=100)
 with col2:
     tax_rate = st.number_input("Tax Rate % (deductable rate)", value=24, step=1)
 with col3:
     gpu_per_system = st.number_input("GPU cards per system", value=5)
 num_systems = st.slider("Number of systems", 1, 24, 6)
+other_costs1 = st.number_input("Other setup costs 1", value=10000, step=100)
+other_costs2 = st.number_input("Other setup costs 2", value=3000, step=100)
 
-effective_cost = unit_price - (unit_price * (tax_rate / 100))
-st.write(f"Effective Cost in GBP per system: £{effective_cost:,.0f}")
-st.write(f"Total cost of systems is: £{effective_cost * num_systems:,.0f} which includes {num_systems * gpu_per_system} GPU cards")
+effective_other_costs = (other_costs1 + other_costs2) - ((other_costs1 - other_costs2) * tax_rate / 100)
+system_cost = unit_price - (unit_price * (tax_rate / 100))
+total_system_cost = system_cost * num_systems
+total_investment = total_system_cost + effective_other_costs
+
+#effective_cost = system_cost + effective_other_costs
+st.write(f"Effective Cost in GBP per system: £{system_cost:,.0f}")
+st.write(f"Total cost of systems is: £{total_system_cost:,.0f} which includes {num_systems * gpu_per_system} GPU cards")
+
+st.write(f"Total investment: £{total_investment:,.0f}")
+
+
 
 st.divider()
 
@@ -124,10 +135,6 @@ df = pd.DataFrame({
     'Other Costs': other_costs,
     'Net Profit': net_profits
 })
-
-# Calculate ROI
-total_investment = effective_cost * num_systems
-# roi_years = total_investment / (df['Net Profit'].mean())
 
 # Display results
 st.write("### Annual Profit Breakdown")
