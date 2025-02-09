@@ -27,7 +27,7 @@ with col2:
 with col3:
     gpu_per_system = st.number_input("GPU cards per system", value=5)
 num_systems = st.slider("Number of systems", 1, 24, 6)
-other_costs1 = st.number_input("Other setup costs 1", value=10000, step=100)
+other_costs1 = st.number_input("Other setup costs 1", value=10971, step=100)
 other_costs2 = st.number_input("Other setup costs 2", value=3000, step=100)
 
 effective_other_costs = (other_costs1 + other_costs2) - ((other_costs1 - other_costs2) * tax_rate / 100)
